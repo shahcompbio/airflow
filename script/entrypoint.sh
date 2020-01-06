@@ -2,6 +2,8 @@
 
 TRY_LOOP="20"
 
+apt-get install vim
+
 : "${REDIS_HOST:="redis"}"
 : "${REDIS_PORT:="6379"}"
 : "${REDIS_PASSWORD:=""}"
@@ -16,6 +18,10 @@ TRY_LOOP="20"
 : "${AIRFLOW_HOME:="/usr/local/airflow"}"
 : "${AIRFLOW__CORE__FERNET_KEY:=${FERNET_KEY:=$(python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print(FERNET_KEY)")}}"
 : "${AIRFLOW__CORE__EXECUTOR:=${EXECUTOR:-Sequential}Executor}"
+: "${AIRFLOW__WEBSERVER__WEB_SERVER_SSL_CERT="${AIRFLOW_USER_HOME}/public.key"}"
+: "${AIRFLOW__WEBSERVER__WEB_SERVER_SSL_KEY="${AIRFLOW_USER_HOME}/private.key"}"
+: "${AIRFLOW__WEBSERVER__AUTHENTICATE="True"}"
+: "${AIRFLOW__WEBSERVER__AUTH_BACKEND="airflow.contrib.auth.backends.password_auth"}"
 
 export \
   AIRFLOW_HOME \
