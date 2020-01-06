@@ -1,0 +1,5 @@
+export POSTGRES_USER="airflow"
+export POSTGRES_PASSWORD="PUT_PASSWORD_HERE"
+export POSTGRES_DB="airflow"
+export REDIS_PASSWORD="PUT_PASSWORD_HERE"
+export AIRFLOW_HOME="/usr/local/airflow"
