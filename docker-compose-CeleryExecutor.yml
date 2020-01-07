@@ -42,7 +42,6 @@ services:
             - AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL=60 # Prevent airflow from reloading the dags all the time and set. 
                                                                # This is the main setting that reduces CPU load in the scheduler
             - AIRFLOW__SCHEDULER__SCHEDULER_MAX_THREADS=1 # This should be set to (CPU Cores - 1)
-            #- AIRFLOW__CORE__EXECUTOR=CeleryExecutor
         volumes:
             - ./dags:/usr/local/airflow/dags
             # Uncomment to include custom plugins
