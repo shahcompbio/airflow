@@ -16,14 +16,13 @@ default_args = {
     "email_on_retry": False,
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
-    'schedule_interval': timedelta(minutes=10),
     # 'queue': 'bash_queue',
     # 'pool': 'backfill',
     # 'priority_weight': 10,
     # 'end_date': datetime(2016, 1, 1),
 }
 
-dag = DAG("tutorial", catchup=False, default_args=default_args)
+dag = DAG("tutorial", catchup=False, schedule_interval="@hourly", default_args=default_args)
 
 # t1, t2 and t3 are examples of tasks created by instantiating operators
 t1 = BashOperator(task_id="print_date", bash_command="date", dag=dag)
