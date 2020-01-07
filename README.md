@@ -1,6 +1,6 @@
 # airflow
 
-## [Original Documentation](https://github.com/puckel/docker-airflow/blob/master/README.md)
+[Documentation from forked repo](https://github.com/puckel/docker-airflow/blob/master/README.md). Refer to this documentation when making changes to the production deployment.
 
 ## Shah lab Production Deployment
 This deployment employs the Celery scheduler. This scheduler adds tasks to a queue using Redis, and remote workers pick them off of the queue and execute them. The workers run on separate processes from the scheduler and are therefore fully isolated makeing the system highly scalable — heavy and expanding loads can be managed by simply adding additional workers and instantly increasing the throughput of the system.
@@ -73,4 +73,12 @@ This deployment employs role based access control.
     docker-compose -f docker-compose-CeleryExecutor.yml up -d
  ```
 
-5. Airflow automatically picks up the new DAG and displays it on the UI.
+5. Test DAG locally. 
+
+```bash
+    docker-compose -f docker-compose-CeleryExecutor.yml exec webserver /entrypoint.sh bash
+    airflow test --help
+    airflow test tutorial print_date 2015-06-01
+   ```
+
+6. Airflow automatically picks up the new DAG and displays it on the UI.
