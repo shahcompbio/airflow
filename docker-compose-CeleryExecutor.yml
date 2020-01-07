@@ -51,7 +51,7 @@ services:
             - ./config/private.key:/config/private.key
             - ./script/webserver_config.py:${AIRFLOW_HOME}/webserver_config.py:z
         ports:
-            - "8080:8080"
+            - "0.0.0.0:8080:8080"
         command: webserver
         healthcheck:
             test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
