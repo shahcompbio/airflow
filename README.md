@@ -56,7 +56,7 @@ This deployment employs role based access control.
     airflow create_user -r Admin -u admin -e admin@example.com -f admin -l user -p test
    ```
    
-  8. Log into UI at https://DEPLOYMENT_URL:8080.
+  8. Log into UI at https://DEPLOYMENT_URL[:PORT].
 
 ## Adding DAGS
 
