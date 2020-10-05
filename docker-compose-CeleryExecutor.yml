@@ -2,7 +2,7 @@ version: '2.1'
 services:
     redis:
         image: 'redis:5.0.5'
-        # command: redis-server --requirepass ${REDIS_PASSWORD}
+        command: redis-server --requirepass ${REDIS_PASSWORD}
 
     postgres:
         image: postgres:9.6
