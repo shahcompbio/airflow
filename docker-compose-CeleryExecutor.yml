@@ -2,7 +2,7 @@ version: '2.1'
 services:
     redis:
         image: 'redis:5.0.5'
-        command: redis-server --requirepass ${REDIS_PASSWORD}
+        # command: redis-server --requirepass ${REDIS_PASSWORD}
 
     postgres:
         image: postgres:9.6
@@ -16,7 +16,7 @@ services:
             - ./pgdata:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: puckel/docker-airflow:1.10.6
+        image: puckel/docker-airflow:1.10.9
         restart: always
         depends_on:
             - postgres
@@ -29,13 +29,13 @@ services:
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
             - POSTGRES_DB=${POSTGRES_DB}
             - REDIS_PASSWORD=${REDIS_PASSWORD}
-            - AIRFLOW__WEBSERVER__WEB_SERVER_SSL_CERT=/config/public.key
-            - AIRFLOW__WEBSERVER__WEB_SERVER_SSL_KEY=/config/private.key
+            - AIRFLOW__WEBSERVER__WEB_SERVER_SSL_CERT=/config/cert.crt
+            - AIRFLOW__WEBSERVER__WEB_SERVER_SSL_KEY=/config/ssl.key
             - AIRFLOW__WEBSERVER__AUTHENTICATE=True
             - AIRFLOW__WEBSERVER__AUTH_BACKEND=airflow.contrib.auth.backends.password_auth
             - AIRFLOW__WEBSERVER__RBAC=True
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/airflow
-            #- AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/airflow
+            - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/airflow
             - AIRFLOW__WEBSERVER__WORKERS=2 # 2 * NUM_CPU_CORES + 1
             - AIRFLOW__WEBSERVER__WORKER_REFRESH_INTERVAL=1800 # Restart workers every 30min instead of 30seconds
             - AIRFLOW__WEBSERVER__WEB_SERVER_WORKER_TIMEOUT=300 #Kill workers if they don't start within 5min instead of 2min
@@ -45,10 +45,10 @@ services:
         volumes:
             - ./dags:/usr/local/airflow/dags
             # Uncomment to include custom plugins
-            # ./plugins:/usr/local/airflow/plugins
+            # - ./plugins:/usr/local/airflow/plugins
             - ./requirements.txt:/requirements.txt
-            - ./config/public.key:/config/public.key
-            - ./config/private.key:/config/private.key
+            - ./config/cert.crt:/config/cert.crt
+            - ./config/ssl.key:/config/ssl.key
             - ./script/webserver_config.py:${AIRFLOW_HOME}/webserver_config.py:z
         ports:
             - "0.0.0.0:8080:8080"
@@ -60,7 +60,7 @@ services:
             retries: 3
 
     flower:
-        image: puckel/docker-airflow:1.10.6
+        image: puckel/docker-airflow:1.10.9
         restart: always
         depends_on:
             - postgres
@@ -76,7 +76,7 @@ services:
         command: flower
 
     scheduler:
-        image: puckel/docker-airflow:1.10.6
+        image: puckel/docker-airflow:1.10.9
         restart: always
         depends_on:
             - webserver
@@ -95,7 +95,7 @@ services:
         command: scheduler
 
     worker:
-        image: puckel/docker-airflow:1.10.6
+        image: puckel/docker-airflow:1.10.9
         restart: always
         depends_on:
             - scheduler
@@ -111,3 +111,4 @@ services:
             - POSTGRES_DB=${POSTGRES_DB}
             - REDIS_PASSWORD=${REDIS_PASSWORD}
         command: worker
+
